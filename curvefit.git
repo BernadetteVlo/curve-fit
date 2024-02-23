@@ -1,0 +1,44 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+
+# Sample data 
+x = np.array([])
+y = np.array([])
+
+#Define function 
+def model_function(x, a, b, c):
+    return a * x**2 + b * x + c
+
+# Initial guess for the parameters
+initial_guess = [1, 1, -1]
+
+# Perform the curve fit using least squares method
+fit_params, covariance = curve_fit(model_function, x, y, p0=initial_guess)
+
+# Extract the fitted parameters
+a_fit, b_fit, c_fit = fit_params
+
+# Calculate the R-squared value
+y_fit = model_function(x, a_fit, b_fit, c_fit)
+residuals = y - y_fit
+ss_residuals = np.sum(residuals**2)
+ss_total = np.sum((y - np.mean(y))**2)
+r_squared = 1 - (ss_residuals / ss_total)
+
+# Plot the data 
+plt.plot(x, y, 'o', label='Data')
+
+plt.ylabel("Activity")
+plt.xlabel("Calculated values (unit)")
+plt.title('Activity vs Calc. value')
+
+#Plot the model
+t = np.linspace(1,2)
+plt.plot(t,model_function(t,a_fit, b_fit, c_fit), label="model")
+plt.legend()
+
+# Print the results
+print("Fitted Parameters (a, b, c):", fit_params)
+print("R-squared:", r_squared)
+
